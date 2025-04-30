@@ -73,12 +73,54 @@ The goal is to replicate Airbnb’s core backend functionality.
 
 ---
 
-## 👥 Team Roles
+## 👥 Project Team Roles & Responsibilities
 
-- **Backend Developer**: APIs, models, logic.
-- **Database Admin**: Schema design, indexing.
-- **DevOps Engineer**: Deployment, scaling, monitoring.
-- **QA Engineer**: Testing and quality assurance.
+### 1. Backend Developer
+
+**Responsibilities:**
+- Develops and maintains the server-side logic of the application.
+- Implements APIs and integrates with databases and third-party services.
+- Ensures the application is scalable, secure, and performs efficiently.
+- Collaborates with frontend developers to align on data requirements and API structures.
+
+> **Note:** Experienced backend developers may also take on architectural decisions, similar to a software architect's role.  
+> _Source: ITRex_
+
+---
+
+### 2. Database Administrator (DBA)
+
+**Responsibilities:**
+- Designs, implements, and maintains the database systems.
+- Ensures data integrity, security, and optimal performance through indexing and query optimization.
+- Manages data backups, recovery, and migration processes.
+- Collaborates with developers to optimize database interactions and support application requirements.
+
+---
+
+### 3. DevOps Engineer
+
+**Responsibilities:**
+- Bridges the gap between development and operations teams to streamline the software delivery process.
+- Sets up and maintains CI/CD pipelines for automated testing and deployment.
+- Manages infrastructure provisioning and configuration, often using tools like Docker and Kubernetes.
+- Monitors system performance and implements strategies for scalability and reliability.
+
+> **Note:** DevOps is more of a cultural and operational approach than a specific job title, focusing on collaboration and automation.  
+> _Source: ITRex, WIRED_
+
+---
+
+### 4. Quality Assurance (QA) Engineer
+
+**Responsibilities:**
+- Develops and executes test plans to ensure the application meets specified requirements.
+- Identifies, documents, and tracks bugs or issues in the software.
+- Performs various types of testing, including functional, performance, and security tests.
+- Collaborates with developers to resolve defects and improve overall product quality.
+
+> **Note:** QA engineers play a crucial role in maintaining the application's reliability and user satisfaction.  
+> _Source: ITRex_
 
 ---
 
