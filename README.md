@@ -250,6 +250,42 @@ This document outlines the core database models required for building the backen
 
 ---
 
+## 📌 Endpoints Overview
+
+### Users
+- `GET /users/` - List all users  
+- `POST /users/` - Register a new user  
+- `GET /users/{user_id}/` - Retrieve a user  
+- `PUT /users/{user_id}/` - Update a user  
+- `DELETE /users/{user_id}/` - Delete a user  
+
+### Properties
+- `GET /properties/` - List all properties  
+- `POST /properties/` - Create a property  
+- `GET /properties/{property_id}/` - Get property details  
+- `PUT /properties/{property_id}/` - Update a property  
+- `DELETE /properties/{property_id}/` - Delete a property  
+
+### Bookings
+- `GET /bookings/` - List all bookings  
+- `POST /bookings/` - Make a booking  
+- `GET /bookings/{booking_id}/` - Get booking details  
+- `PUT /bookings/{booking_id}/` - Update a booking  
+- `DELETE /bookings/{booking_id}/` - Cancel a booking  
+
+### Payments
+- `POST /payments/` - Process a payment  
+
+### Reviews
+- `GET /reviews/` - List all reviews  
+- `POST /reviews/` - Create a review  
+- `GET /reviews/{review_id}/` - Get a review  
+- `PUT /reviews/{review_id}/` - Update a review  
+- `DELETE /reviews/{review_id}/` - Delete a review  
+
+
+---
+
 ## 📈 API Documentation Overview
 
 ### REST API
@@ -302,41 +338,6 @@ This document outlines the core database models required for building the backen
    - **Purpose**: Manages user sessions securely.
    - **Explanation**: Secure session management techniques are used to handle user sessions, such as using secure, HttpOnly cookies to store session tokens and implementing session timeouts to limit exposure in case a session is hijacked.
    - **Why it’s Crucial**: Proper session management ensures that user sessions are terminated when they are no longer needed, reducing the risk of unauthorized access due to session hijacking or misuse.
-
-
-
-## 📌 Endpoints Overview
-
-### Users
-- `GET /users/` - List all users  
-- `POST /users/` - Register a new user  
-- `GET /users/{user_id}/` - Retrieve a user  
-- `PUT /users/{user_id}/` - Update a user  
-- `DELETE /users/{user_id}/` - Delete a user  
-
-### Properties
-- `GET /properties/` - List all properties  
-- `POST /properties/` - Create a property  
-- `GET /properties/{property_id}/` - Get property details  
-- `PUT /properties/{property_id}/` - Update a property  
-- `DELETE /properties/{property_id}/` - Delete a property  
-
-### Bookings
-- `GET /bookings/` - List all bookings  
-- `POST /bookings/` - Make a booking  
-- `GET /bookings/{booking_id}/` - Get booking details  
-- `PUT /bookings/{booking_id}/` - Update a booking  
-- `DELETE /bookings/{booking_id}/` - Cancel a booking  
-
-### Payments
-- `POST /payments/` - Process a payment  
-
-### Reviews
-- `GET /reviews/` - List all reviews  
-- `POST /reviews/` - Create a review  
-- `GET /reviews/{review_id}/` - Get a review  
-- `PUT /reviews/{review_id}/` - Update a review  
-- `DELETE /reviews/{review_id}/` - Delete a review  
 
 ---
 
