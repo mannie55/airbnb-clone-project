@@ -1,4 +1,4 @@
-# Airbnb Clone Backend
+# 🏡 Airbnb Clone Backend
 
 ## 🚀 Objective
 
@@ -61,6 +61,53 @@ The goal is to replicate Airbnb’s core backend functionality.
 
 ---
 
+## 🧩 Database Design
+
+### Tables & Relationships
+
+#### 1. **User**
+- `id` (PK)
+- `username`, `email`, `password`
+- `first_name`, `last_name`
+- `date_joined`, `is_host`
+
+> One user can own many properties and make many bookings.
+
+#### 2. **Property**
+- `id` (PK)
+- `owner_id` (FK to User)
+- `title`, `description`
+- `location`, `price_per_night`
+- `created_at`, `updated_at`
+
+> A property is owned by one user and can have many bookings and reviews.
+
+#### 3. **Booking**
+- `id` (PK)
+- `user_id` (FK to User)
+- `property_id` (FK to Property)
+- `start_date`, `end_date`
+- `status` (Pending, Confirmed, Cancelled)
+
+> A booking links a user to a property for a date range.
+
+#### 4. **Payment**
+- `id` (PK)
+- `booking_id` (FK to Booking)
+- `amount`, `payment_date`, `status` (Paid, Failed)
+
+> Payments are tied to bookings.
+
+#### 5. **Review**
+- `id` (PK)
+- `user_id` (FK to User)
+- `property_id` (FK to Property)
+- `rating`, `comment`, `created_at`
+
+> Each user can review a property they have booked.
+
+---
+
 ## ⚙️ Technology Stack
 
 - **Backend**: Django
@@ -78,12 +125,11 @@ The goal is to replicate Airbnb’s core backend functionality.
 ### 1. Backend Developer
 
 **Responsibilities:**
-- Develops and maintains the server-side logic of the application.
-- Implements APIs and integrates with databases and third-party services.
-- Ensures the application is scalable, secure, and performs efficiently.
-- Collaborates with frontend developers to align on data requirements and API structures.
+- Build server-side logic and APIs.
+- Connect frontend and backend.
+- Handle business logic and integrations.
 
-> **Note:** Experienced backend developers may also take on architectural decisions, similar to a software architect's role.  
+> May also handle architectural decisions.  
 > _Source: ITRex_
 
 ---
@@ -91,22 +137,20 @@ The goal is to replicate Airbnb’s core backend functionality.
 ### 2. Database Administrator (DBA)
 
 **Responsibilities:**
-- Designs, implements, and maintains the database systems.
-- Ensures data integrity, security, and optimal performance through indexing and query optimization.
-- Manages data backups, recovery, and migration processes.
-- Collaborates with developers to optimize database interactions and support application requirements.
+- Design and optimize the database.
+- Ensure data integrity and performance.
+- Handle backups, migrations, and scaling.
 
 ---
 
 ### 3. DevOps Engineer
 
 **Responsibilities:**
-- Bridges the gap between development and operations teams to streamline the software delivery process.
-- Sets up and maintains CI/CD pipelines for automated testing and deployment.
-- Manages infrastructure provisioning and configuration, often using tools like Docker and Kubernetes.
-- Monitors system performance and implements strategies for scalability and reliability.
+- Setup CI/CD, testing, and deployment.
+- Manage containers and infrastructure.
+- Monitor and scale backend services.
 
-> **Note:** DevOps is more of a cultural and operational approach than a specific job title, focusing on collaboration and automation.  
+> DevOps is more of a workflow and culture.  
 > _Source: ITRex, WIRED_
 
 ---
@@ -114,12 +158,11 @@ The goal is to replicate Airbnb’s core backend functionality.
 ### 4. Quality Assurance (QA) Engineer
 
 **Responsibilities:**
-- Develops and executes test plans to ensure the application meets specified requirements.
-- Identifies, documents, and tracks bugs or issues in the software.
-- Performs various types of testing, including functional, performance, and security tests.
-- Collaborates with developers to resolve defects and improve overall product quality.
+- Write and run test cases.
+- Report and track bugs.
+- Ensure system stability and correctness.
 
-> **Note:** QA engineers play a crucial role in maintaining the application's reliability and user satisfaction.  
+> Key to ensuring the app meets user expectations.  
 > _Source: ITRex_
 
 ---
@@ -127,11 +170,11 @@ The goal is to replicate Airbnb’s core backend functionality.
 ## 📈 API Documentation Overview
 
 ### REST API
-- Uses Django REST Framework
-- Documented with OpenAPI
+- Built with Django REST Framework
+- Follows OpenAPI standard
 
-### GraphQL
-- Supports flexible queries and mutations
+### GraphQL API
+- Enables flexible queries and data fetching
 
 ---
 
