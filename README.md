@@ -61,50 +61,109 @@ The goal is to replicate Airbnb’s core backend functionality.
 
 ---
 
-## 🧩 Database Design
+# 🧩 Airbnb Clone – Database Design
 
-### Tables & Relationships
+This document outlines the core database models required for building the backend of the Airbnb Clone project. These models support the features for users, properties, bookings, payments, and reviews.
 
-#### 1. **User**
-- `id` (PK)
-- `username`, `email`, `password`
-- `first_name`, `last_name`
-- `date_joined`, `is_host`
+---
 
-> One user can own many properties and make many bookings.
+## 1. 🧑‍💼 User Table
 
-#### 2. **Property**
-- `id` (PK)
-- `owner_id` (FK to User)
-- `title`, `description`
-- `location`, `price_per_night`
-- `created_at`, `updated_at`
+| Field          | Type           | Description                         |
+|----------------|----------------|-------------------------------------|
+| id             | UUID / Integer | Primary key                         |
+| username       | String         | Unique username                     |
+| email          | String         | Unique email                        |
+| password_hash  | String         | Hashed password                     |
+| first_name     | String         | User’s first name                   |
+| last_name      | String         | User’s last name                    |
+| role           | String         | `host` or `guest`                   |
+| date_joined    | DateTime       | When the account was created        |
+| is_active      | Boolean        | If the user account is active       |
+| profile_image  | URL / String   | Optional profile picture            |
 
-> A property is owned by one user and can have many bookings and reviews.
+> A user can be a **host** (owns properties) or a **guest** (books properties).
 
-#### 3. **Booking**
-- `id` (PK)
-- `user_id` (FK to User)
-- `property_id` (FK to Property)
-- `start_date`, `end_date`
-- `status` (Pending, Confirmed, Cancelled)
+---
 
-> A booking links a user to a property for a date range.
+## 2. 🏡 Property Table
 
-#### 4. **Payment**
-- `id` (PK)
-- `booking_id` (FK to Booking)
-- `amount`, `payment_date`, `status` (Paid, Failed)
+| Field           | Type           | Description                               |
+|-----------------|----------------|-------------------------------------------|
+| id              | UUID / Integer | Primary key                               |
+| owner_id        | FK → User      | The user who listed the property (host)   |
+| title           | String         | Title of the listing                      |
+| description     | Text           | Full description of the property          |
+| address         | String         | Property address                          |
+| city            | String         | City where property is located            |
+| country         | String         | Country of location                       |
+| price_per_night | Decimal        | Nightly rate                              |
+| max_guests      | Integer        | Max number of guests                      |
+| is_available    | Boolean        | Availability flag                         |
+| created_at      | DateTime       | When the property was listed              |
+| updated_at      | DateTime       | Last update time                          |
 
-> Payments are tied to bookings.
+> A property belongs to **one host** (user).
 
-#### 5. **Review**
-- `id` (PK)
-- `user_id` (FK to User)
-- `property_id` (FK to Property)
-- `rating`, `comment`, `created_at`
+---
 
-> Each user can review a property they have booked.
+## 3. 📅 Booking Table
+
+| Field         | Type           | Description                            |
+|---------------|----------------|----------------------------------------|
+| id            | UUID / Integer | Primary key                            |
+| user_id       | FK → User      | Guest who made the booking             |
+| property_id   | FK → Property  | Property being booked                  |
+| check_in      | Date           | Check-in date                          |
+| check_out     | Date           | Check-out date                         |
+| num_guests    | Integer        | Number of guests                       |
+| status        | String         | `pending`, `confirmed`, `cancelled`    |
+| created_at    | DateTime       | Booking creation time                  |
+| updated_at    | DateTime       | Booking update time                    |
+
+> A user (guest) books a property.
+
+---
+
+## 4. 💳 Payment Table
+
+| Field         | Type           | Description                             |
+|---------------|----------------|-----------------------------------------|
+| id            | UUID / Integer | Primary key                             |
+| booking_id    | FK → Booking   | Booking related to this payment         |
+| user_id       | FK → User      | The guest who made the payment          |
+| amount        | Decimal        | Total amount paid                       |
+| status        | String         | `success`, `failed`, `pending`          |
+| transaction_id| String         | External payment gateway transaction ID |
+| paid_at       | DateTime       | Payment timestamp                       |
+
+> Each payment is tied to **one booking**.
+
+---
+
+## 5. 📝 Review Table
+
+| Field         | Type           | Description                             |
+|---------------|----------------|-----------------------------------------|
+| id            | UUID / Integer | Primary key                             |
+| user_id       | FK → User      | Reviewer (guest)                        |
+| property_id   | FK → Property  | Reviewed property                       |
+| rating        | Integer        | 1 to 5 stars                            |
+| comment       | Text           | Review content                          |
+| created_at    | DateTime       | Review creation time                    |
+
+> A guest can leave **one review per booking** (enforceable via constraints if required).
+
+---
+
+## 🔁 Relationships Summary
+
+- `User` 1️⃣ ➝ 🔢 `Property` (host owns multiple properties)
+- `User` 1️⃣ ➝ 🔢 `Booking` (guest can make multiple bookings)
+- `User` 1️⃣ ➝ 🔢 `Review` (guest can leave reviews)
+- `Property` 1️⃣ ➝ 🔢 `Booking` (a property can have many bookings)
+- `Booking` 1️⃣ ➝ 1️⃣ `Payment` (each booking has one payment)
+- `Property` 1️⃣ ➝ 🔢 `Review` (each property can have many reviews)
 
 ---
 
