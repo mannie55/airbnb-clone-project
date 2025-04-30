@@ -167,15 +167,39 @@ This document outlines the core database models required for building the backen
 
 ---
 
-## ⚙️ Technology Stack
+## 🧰 Technology Stack
 
-- **Backend**: Django
-- **API**: Django REST Framework, GraphQL
-- **Database**: PostgreSQL
-- **Async Tasks**: Celery
-- **Caching**: Redis
-- **Containers**: Docker
-- **CI/CD**: Automated testing and deployment
+### 1. **Django**
+   - **Purpose**: A web framework for building RESTful APIs and handling server-side logic.
+   - **Description**: Django is used to manage the backend logic, user authentication, data processing, and rendering API responses. It provides tools for easily creating and managing the database, routing URLs to views, and interacting with the database using Django's ORM.
+
+### 2. **Django REST Framework (DRF)**
+   - **Purpose**: A toolkit for building Web APIs in Django.
+   - **Description**: DRF is used to simplify the process of building RESTful APIs in Django. It provides classes for serialization (turning data into JSON format), authentication, permissions, and viewsets for handling CRUD operations efficiently.
+
+### 3. **GraphQL**
+   - **Purpose**: A query language for APIs and runtime for executing those queries by using a type system.
+   - **Description**: GraphQL provides a flexible and efficient way to interact with data. Instead of having multiple endpoints for different queries, GraphQL allows clients to request only the data they need, which can reduce the number of API requests and improve performance.
+
+### 4. **PostgreSQL**
+   - **Purpose**: A relational database management system.
+   - **Description**: PostgreSQL is used to store data in the application. It is a powerful, open-source object-relational database system known for its robustness, scalability, and support for advanced data types and queries.
+
+### 5. **Celery**
+   - **Purpose**: An asynchronous task queue/job queue system.
+   - **Description**: Celery is used to handle background tasks such as sending emails, processing payments, or generating reports asynchronously, which helps keep the main application responsive and performant.
+
+### 6. **Redis**
+   - **Purpose**: A powerful, in-memory data structure store.
+   - **Description**: Redis is used for caching, reducing database load, and speeding up data retrieval. It helps improve performance by storing frequently accessed data in memory.
+
+### 7. **Docker**
+   - **Purpose**: A platform for developing, shipping, and running applications inside containers.
+   - **Description**: Docker is used to containerize the application, making it easier to manage, scale, and deploy across different environments. It ensures the application runs the same way regardless of where it's deployed.
+
+### 8. **CI/CD (Continuous Integration/Continuous Deployment)**
+   - **Purpose**: Automating the process of testing, building, and deploying applications.
+   - **Description**: CI/CD tools are used to automate the software development lifecycle. With CI/CD pipelines, tests are run automatically on every code change, and deployment to production is streamlined, reducing human error and improving software quality.
 
 ---
 
