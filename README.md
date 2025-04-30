@@ -12,6 +12,7 @@ The goal is to replicate Airbnb’s core backend functionality.
 
 ---
 
+
 ## 🏆 Project Goals
 
 - **User Management**: Secure registration, login, and profile management.
@@ -22,188 +23,7 @@ The goal is to replicate Airbnb’s core backend functionality.
 - **Data Optimization**: Fast data access through indexing and caching.
 
 ---
-
-## 🛠️ Features Overview
-
-### 1. API Documentation
-- **OpenAPI Standard**: Clear and structured docs.
-- **Django REST Framework**: For CRUD operations.
-- **GraphQL**: For flexible data queries.
-
-### 2. User Authentication
-- **Endpoints**:  
-  `/users/`, `/users/{user_id}/`  
-- **Features**: Register, authenticate, manage profiles.
-
-### 3. Property Management
-- **Endpoints**:  
-  `/properties/`, `/properties/{property_id}/`  
-- **Features**: Create, update, delete, retrieve listings.
-
-### 4. Booking System
-- **Endpoints**:  
-  `/bookings/`, `/bookings/{booking_id}/`  
-- **Features**: Make, update, cancel bookings.
-
-### 5. Payment Processing
-- **Endpoint**:  
-  `/payments/`  
-- **Feature**: Handle booking payments.
-
-### 6. Review System
-- **Endpoints**:  
-  `/reviews/`, `/reviews/{review_id}/`  
-- **Features**: Post, update, delete reviews.
-
-### 7. Database Optimizations
-- **Indexing**: For faster queries.
-- **Caching**: Using Redis to reduce DB load.
-
----
-
-# 🧩 Airbnb Clone – Database Design
-
-This document outlines the core database models required for building the backend of the Airbnb Clone project. These models support the features for users, properties, bookings, payments, and reviews.
-
----
-
-## 1. 🧑‍💼 User Table
-
-| Field          | Type           | Description                         |
-|----------------|----------------|-------------------------------------|
-| id             | UUID / Integer | Primary key                         |
-| username       | String         | Unique username                     |
-| email          | String         | Unique email                        |
-| password_hash  | String         | Hashed password                     |
-| first_name     | String         | User’s first name                   |
-| last_name      | String         | User’s last name                    |
-| role           | String         | `host` or `guest`                   |
-| date_joined    | DateTime       | When the account was created        |
-| is_active      | Boolean        | If the user account is active       |
-| profile_image  | URL / String   | Optional profile picture            |
-
-> A user can be a **host** (owns properties) or a **guest** (books properties).
-
----
-
-## 2. 🏡 Property Table
-
-| Field           | Type           | Description                               |
-|-----------------|----------------|-------------------------------------------|
-| id              | UUID / Integer | Primary key                               |
-| owner_id        | FK → User      | The user who listed the property (host)   |
-| title           | String         | Title of the listing                      |
-| description     | Text           | Full description of the property          |
-| address         | String         | Property address                          |
-| city            | String         | City where property is located            |
-| country         | String         | Country of location                       |
-| price_per_night | Decimal        | Nightly rate                              |
-| max_guests      | Integer        | Max number of guests                      |
-| is_available    | Boolean        | Availability flag                         |
-| created_at      | DateTime       | When the property was listed              |
-| updated_at      | DateTime       | Last update time                          |
-
-> A property belongs to **one host** (user).
-
----
-
-## 3. 📅 Booking Table
-
-| Field         | Type           | Description                            |
-|---------------|----------------|----------------------------------------|
-| id            | UUID / Integer | Primary key                            |
-| user_id       | FK → User      | Guest who made the booking             |
-| property_id   | FK → Property  | Property being booked                  |
-| check_in      | Date           | Check-in date                          |
-| check_out     | Date           | Check-out date                         |
-| num_guests    | Integer        | Number of guests                       |
-| status        | String         | `pending`, `confirmed`, `cancelled`    |
-| created_at    | DateTime       | Booking creation time                  |
-| updated_at    | DateTime       | Booking update time                    |
-
-> A user (guest) books a property.
-
----
-
-## 4. 💳 Payment Table
-
-| Field         | Type           | Description                             |
-|---------------|----------------|-----------------------------------------|
-| id            | UUID / Integer | Primary key                             |
-| booking_id    | FK → Booking   | Booking related to this payment         |
-| user_id       | FK → User      | The guest who made the payment          |
-| amount        | Decimal        | Total amount paid                       |
-| status        | String         | `success`, `failed`, `pending`          |
-| transaction_id| String         | External payment gateway transaction ID |
-| paid_at       | DateTime       | Payment timestamp                       |
-
-> Each payment is tied to **one booking**.
-
----
-
-## 5. 📝 Review Table
-
-| Field         | Type           | Description                             |
-|---------------|----------------|-----------------------------------------|
-| id            | UUID / Integer | Primary key                             |
-| user_id       | FK → User      | Reviewer (guest)                        |
-| property_id   | FK → Property  | Reviewed property                       |
-| rating        | Integer        | 1 to 5 stars                            |
-| comment       | Text           | Review content                          |
-| created_at    | DateTime       | Review creation time                    |
-
-> A guest can leave **one review per booking** (enforceable via constraints if required).
-
----
-
-## 🔁 Relationships Summary
-
-- `User` 1️⃣ ➝ 🔢 `Property` (host owns multiple properties)
-- `User` 1️⃣ ➝ 🔢 `Booking` (guest can make multiple bookings)
-- `User` 1️⃣ ➝ 🔢 `Review` (guest can leave reviews)
-- `Property` 1️⃣ ➝ 🔢 `Booking` (a property can have many bookings)
-- `Booking` 1️⃣ ➝ 1️⃣ `Payment` (each booking has one payment)
-- `Property` 1️⃣ ➝ 🔢 `Review` (each property can have many reviews)
-
----
-
-## 🧰 Technology Stack
-
-### 1. **Django**
-   - **Purpose**: A web framework for building RESTful APIs and handling server-side logic.
-   - **Description**: Django is used to manage the backend logic, user authentication, data processing, and rendering API responses. It provides tools for easily creating and managing the database, routing URLs to views, and interacting with the database using Django's ORM.
-
-### 2. **Django REST Framework (DRF)**
-   - **Purpose**: A toolkit for building Web APIs in Django.
-   - **Description**: DRF is used to simplify the process of building RESTful APIs in Django. It provides classes for serialization (turning data into JSON format), authentication, permissions, and viewsets for handling CRUD operations efficiently.
-
-### 3. **GraphQL**
-   - **Purpose**: A query language for APIs and runtime for executing those queries by using a type system.
-   - **Description**: GraphQL provides a flexible and efficient way to interact with data. Instead of having multiple endpoints for different queries, GraphQL allows clients to request only the data they need, which can reduce the number of API requests and improve performance.
-
-### 4. **PostgreSQL**
-   - **Purpose**: A relational database management system.
-   - **Description**: PostgreSQL is used to store data in the application. It is a powerful, open-source object-relational database system known for its robustness, scalability, and support for advanced data types and queries.
-
-### 5. **Celery**
-   - **Purpose**: An asynchronous task queue/job queue system.
-   - **Description**: Celery is used to handle background tasks such as sending emails, processing payments, or generating reports asynchronously, which helps keep the main application responsive and performant.
-
-### 6. **Redis**
-   - **Purpose**: A powerful, in-memory data structure store.
-   - **Description**: Redis is used for caching, reducing database load, and speeding up data retrieval. It helps improve performance by storing frequently accessed data in memory.
-
-### 7. **Docker**
-   - **Purpose**: A platform for developing, shipping, and running applications inside containers.
-   - **Description**: Docker is used to containerize the application, making it easier to manage, scale, and deploy across different environments. It ensures the application runs the same way regardless of where it's deployed.
-
-### 8. **CI/CD (Continuous Integration/Continuous Deployment)**
-   - **Purpose**: Automating the process of testing, building, and deploying applications.
-   - **Description**: CI/CD tools are used to automate the software development lifecycle. With CI/CD pipelines, tests are run automatically on every code change, and deployment to production is streamlined, reducing human error and improving software quality.
-
----
-
-## 👥 Project Team Roles & Responsibilities
+## Team Roles
 
 ### 1. Backend Developer
 
@@ -250,6 +70,186 @@ This document outlines the core database models required for building the backen
 
 ---
 
+
+## 🧰 Technology Stack
+
+### 1. **Django**
+   - **Purpose**: A web framework for building RESTful APIs and handling server-side logic.
+   - **Description**: Django is used to manage the backend logic, user authentication, data processing, and rendering API responses. It provides tools for easily creating and managing the database, routing URLs to views, and interacting with the database using Django's ORM.
+
+### 2. **Django REST Framework (DRF)**
+   - **Purpose**: A toolkit for building Web APIs in Django.
+   - **Description**: DRF is used to simplify the process of building RESTful APIs in Django. It provides classes for serialization (turning data into JSON format), authentication, permissions, and viewsets for handling CRUD operations efficiently.
+
+### 3. **GraphQL**
+   - **Purpose**: A query language for APIs and runtime for executing those queries by using a type system.
+   - **Description**: GraphQL provides a flexible and efficient way to interact with data. Instead of having multiple endpoints for different queries, GraphQL allows clients to request only the data they need, which can reduce the number of API requests and improve performance.
+
+### 4. **PostgreSQL**
+   - **Purpose**: A relational database management system.
+   - **Description**: PostgreSQL is used to store data in the application. It is a powerful, open-source object-relational database system known for its robustness, scalability, and support for advanced data types and queries.
+
+### 5. **Celery**
+   - **Purpose**: An asynchronous task queue/job queue system.
+   - **Description**: Celery is used to handle background tasks such as sending emails, processing payments, or generating reports asynchronously, which helps keep the main application responsive and performant.
+
+### 6. **Redis**
+   - **Purpose**: A powerful, in-memory data structure store.
+   - **Description**: Redis is used for caching, reducing database load, and speeding up data retrieval. It helps improve performance by storing frequently accessed data in memory.
+
+### 7. **Docker**
+   - **Purpose**: A platform for developing, shipping, and running applications inside containers.
+   - **Description**: Docker is used to containerize the application, making it easier to manage, scale, and deploy across different environments. It ensures the application runs the same way regardless of where it's deployed.
+
+### 8. **CI/CD (Continuous Integration/Continuous Deployment)**
+   - **Purpose**: Automating the process of testing, building, and deploying applications.
+   - **Description**: CI/CD tools are used to automate the software development lifecycle. With CI/CD pipelines, tests are run automatically on every code change, and deployment to production is streamlined, reducing human error and improving software quality.
+
+---
+
+# 🧩 Airbnb Clone – Database Design
+
+This document outlines the core database models required for building the backend of the Airbnb Clone project. These models support the features for users, properties, bookings, payments, and reviews.
+
+---
+
+## Database Design
+
+### 1. 🧑‍💼 User Table
+
+| Field          | Type           | Description                         |
+|----------------|----------------|-------------------------------------|
+| id             | UUID / Integer | Primary key                         |
+| username       | String         | Unique username                     |
+| email          | String         | Unique email                        |
+| password_hash  | String         | Hashed password                     |
+| first_name     | String         | User’s first name                   |
+| last_name      | String         | User’s last name                    |
+| role           | String         | `host` or `guest`                   |
+| date_joined    | DateTime       | When the account was created        |
+| is_active      | Boolean        | If the user account is active       |
+| profile_image  | URL / String   | Optional profile picture            |
+
+> A user can be a **host** (owns properties) or a **guest** (books properties).
+
+---
+
+### 2. 🏡 Property Table
+
+| Field           | Type           | Description                               |
+|-----------------|----------------|-------------------------------------------|
+| id              | UUID / Integer | Primary key                               |
+| owner_id        | FK → User      | The user who listed the property (host)   |
+| title           | String         | Title of the listing                      |
+| description     | Text           | Full description of the property          |
+| address         | String         | Property address                          |
+| city            | String         | City where property is located            |
+| country         | String         | Country of location                       |
+| price_per_night | Decimal        | Nightly rate                              |
+| max_guests      | Integer        | Max number of guests                      |
+| is_available    | Boolean        | Availability flag                         |
+| created_at      | DateTime       | When the property was listed              |
+| updated_at      | DateTime       | Last update time                          |
+
+> A property belongs to **one host** (user).
+
+---
+
+### 3. 📅 Booking Table
+
+| Field         | Type           | Description                            |
+|---------------|----------------|----------------------------------------|
+| id            | UUID / Integer | Primary key                            |
+| user_id       | FK → User      | Guest who made the booking             |
+| property_id   | FK → Property  | Property being booked                  |
+| check_in      | Date           | Check-in date                          |
+| check_out     | Date           | Check-out date                         |
+| num_guests    | Integer        | Number of guests                       |
+| status        | String         | `pending`, `confirmed`, `cancelled`    |
+| created_at    | DateTime       | Booking creation time                  |
+| updated_at    | DateTime       | Booking update time                    |
+
+> A user (guest) books a property.
+
+---
+
+### 4. 💳 Payment Table
+
+| Field         | Type           | Description                             |
+|---------------|----------------|-----------------------------------------|
+| id            | UUID / Integer | Primary key                             |
+| booking_id    | FK → Booking   | Booking related to this payment         |
+| user_id       | FK → User      | The guest who made the payment          |
+| amount        | Decimal        | Total amount paid                       |
+| status        | String         | `success`, `failed`, `pending`          |
+| transaction_id| String         | External payment gateway transaction ID |
+| paid_at       | DateTime       | Payment timestamp                       |
+
+> Each payment is tied to **one booking**.
+
+---
+
+### 5. 📝 Review Table
+
+| Field         | Type           | Description                             |
+|---------------|----------------|-----------------------------------------|
+| id            | UUID / Integer | Primary key                             |
+| user_id       | FK → User      | Reviewer (guest)                        |
+| property_id   | FK → Property  | Reviewed property                       |
+| rating        | Integer        | 1 to 5 stars                            |
+| comment       | Text           | Review content                          |
+| created_at    | DateTime       | Review creation time                    |
+
+> A guest can leave **one review per booking** (enforceable via constraints if required).
+
+---
+
+### 🔁 Relationships Summary
+
+- `User` 1️⃣ ➝ 🔢 `Property` (host owns multiple properties)
+- `User` 1️⃣ ➝ 🔢 `Booking` (guest can make multiple bookings)
+- `User` 1️⃣ ➝ 🔢 `Review` (guest can leave reviews)
+- `Property` 1️⃣ ➝ 🔢 `Booking` (a property can have many bookings)
+- `Booking` 1️⃣ ➝ 1️⃣ `Payment` (each booking has one payment)
+- `Property` 1️⃣ ➝ 🔢 `Review` (each property can have many reviews)
+
+
+---
+
+## 🛠️ Feature Breakdown
+
+
+### 2. User Management
+- **Endpoints**:  
+  `/users/`, `/users/{user_id}/`  
+- **Features**: Register, authenticate, manage profiles.
+
+### 3. Property Management
+- **Endpoints**:  
+  `/properties/`, `/properties/{property_id}/`  
+- **Features**: Create, update, delete, retrieve listings.
+
+### 4. Booking System
+- **Endpoints**:  
+  `/bookings/`, `/bookings/{booking_id}/`  
+- **Features**: Make, update, cancel bookings.
+
+### 5. Payment Processing
+- **Endpoint**:  
+  `/payments/`  
+- **Feature**: Handle booking payments.
+
+### 6. Review System
+- **Endpoints**:  
+  `/reviews/`, `/reviews/{review_id}/`  
+- **Features**: Post, update, delete reviews.
+
+### 7. Database Optimizations
+- **Indexing**: For faster queries.
+- **Caching**: Using Redis to reduce DB load.
+
+---
+
 ## 📈 API Documentation Overview
 
 ### REST API
@@ -260,6 +260,50 @@ This document outlines the core database models required for building the backen
 - Enables flexible queries and data fetching
 
 ---
+
+## 🔐 API Security
+
+### 1. **Authentication**
+   - **Purpose**: Ensures that users are who they claim to be.
+   - **Explanation**: Authentication is implemented to verify the identity of users accessing the system. In this project, we use token-based authentication (e.g., JWT or OAuth) to securely authenticate users during login and other interactions.
+   - **Why it’s Crucial**: Without proper authentication, unauthorized users could gain access to sensitive data or perform actions they shouldn't have access to, like creating bookings or making payments.
+
+### 2. **Authorization**
+   - **Purpose**: Determines what an authenticated user is allowed to do.
+   - **Explanation**: Authorization controls user access to resources based on their role or permissions. For example, only users with the role of "admin" can delete properties, while only property owners can edit their own listings.
+   - **Why it’s Crucial**: Authorization ensures that users can only perform actions or access resources they are allowed to. This is important for preventing unauthorized access and ensuring data integrity.
+
+### 3. **Rate Limiting**
+   - **Purpose**: Controls the number of requests a user can make to the API in a given time period.
+   - **Explanation**: Rate limiting is implemented to prevent abuse and protect the system from malicious activities, such as DDoS attacks or brute-force login attempts. It ensures that users don’t overwhelm the system by making too many requests in a short period.
+   - **Why it’s Crucial**: By implementing rate limiting, we protect the system from excessive load and ensure fair access for all users, preventing the backend from becoming slow or unresponsive.
+
+### 4. **Data Encryption**
+   - **Purpose**: Protects data in transit and at rest.
+   - **Explanation**: Encryption is used to protect sensitive data, such as user passwords and payment details. All communication between the client and server is encrypted using HTTPS to ensure data is secure in transit. Sensitive data stored in the database is also encrypted.
+   - **Why it’s Crucial**: Encryption protects user privacy by ensuring that sensitive information (e.g., passwords, financial data) cannot be read by unauthorized parties. This is essential for maintaining trust and compliance with data protection regulations.
+
+### 5. **Input Validation and Sanitization**
+   - **Purpose**: Prevents malicious data from entering the system.
+   - **Explanation**: Input validation and sanitization are implemented to ensure that only valid data is accepted from users and that any potentially harmful data (e.g., SQL injection or cross-site scripting (XSS) attacks) is filtered out.
+   - **Why it’s Crucial**: Validating and sanitizing input helps prevent attackers from exploiting the application’s input forms to execute malicious code that could compromise the system’s security.
+
+### 6. **Logging and Monitoring**
+   - **Purpose**: Tracks suspicious activities and potential security breaches.
+   - **Explanation**: Logs are generated for all key activities, including user logins, payment transactions, and API requests. These logs are monitored for unusual behavior, such as repeated failed login attempts, which might indicate an attempted attack.
+   - **Why it’s Crucial**: Monitoring and logging help detect security threats early, allowing for a rapid response to potential attacks. It also ensures that the system complies with security auditing requirements.
+
+### 7. **Secure Payment Processing**
+   - **Purpose**: Ensures that financial transactions are processed safely.
+   - **Explanation**: Payment processing is handled through secure third-party payment gateways (e.g., Stripe or PayPal) to ensure that sensitive payment information is not exposed to the backend servers. These gateways comply with the Payment Card Industry Data Security Standard (PCI-DSS).
+   - **Why it’s Crucial**: Securing payment data is vital to protect users' financial information and prevent fraud. Insecure payment systems could lead to financial losses and damage to the company's reputation.
+
+### 8. **Session Management**
+   - **Purpose**: Manages user sessions securely.
+   - **Explanation**: Secure session management techniques are used to handle user sessions, such as using secure, HttpOnly cookies to store session tokens and implementing session timeouts to limit exposure in case a session is hijacked.
+   - **Why it’s Crucial**: Proper session management ensures that user sessions are terminated when they are no longer needed, reducing the risk of unauthorized access due to session hijacking or misuse.
+
+
 
 ## 📌 Endpoints Overview
 
