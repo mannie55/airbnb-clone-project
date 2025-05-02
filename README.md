@@ -297,6 +297,26 @@ This document outlines the core database models required for building the backen
 
 ---
 
+## CI/CD Pipeline
+
+A **CI/CD pipeline** (Continuous Integration and Continuous Deployment) is an automated process that helps developers build, test, and deploy code changes more efficiently and reliably. 
+
+### Why It's Important
+
+- **Automation**: It reduces manual work by automating repetitive tasks like testing and deployment.
+- **Early Bug Detection**: Tests run automatically, helping catch errors early in the development cycle.
+- **Faster Delivery**: Changes can be deployed to production more quickly and with confidence.
+- **Consistency**: Ensures code is always deployed in a consistent and reproducible way.
+
+### Tools Used
+
+- **GitHub Actions**: Automates workflows like running tests and deploying code whenever changes are pushed to the repository.
+- **Docker**: Containerizes the application to ensure it runs the same way across all environments.
+- **Docker Hub** or **GitHub Packages**: Used to store and distribute Docker images.
+- **Heroku**, **AWS**, or **DigitalOcean**: Platforms where the final deployment can happen.
+
+---
+
 ## 🔐 API Security
 
 ### 1. **Authentication**
