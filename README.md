@@ -117,18 +117,17 @@ This document outlines the core database models required for building the backen
 
 ### 1. 🧑‍💼 User Table
 
-| Field          | Type           | Description                         |
-|----------------|----------------|-------------------------------------|
-| id             | UUID / Integer | Primary key                         |
-| username       | String         | Unique username                     |
-| email          | String         | Unique email                        |
-| password_hash  | String         | Hashed password                     |
-| first_name     | String         | User’s first name                   |
-| last_name      | String         | User’s last name                    |
-| role           | String         | `host` or `guest`                   |
-| date_joined    | DateTime       | When the account was created        |
-| is_active      | Boolean        | If the user account is active       |
-| profile_image  | URL / String   | Optional profile picture            |
+| Field         | Type               | Description                               |
+|---------------|--------------------|-------------------------------------------|
+| user_id       | UUID               | Primary key (Indexed)                     |
+| first_name    | String (VARCHAR)   | User’s first name (Required)              |
+| last_name     | String (VARCHAR)   | User’s last name (Required)               |
+| email         | String (VARCHAR)   | email address (UNIQUE, Required)          |
+| password_hash | String (VARCHAR)   | Hashed password (Required)                |
+| phone_number  | String (VARCHAR)   | Optional phone number                     |
+| role          | Enum               | `guest`, `host`, or `admin` (Required)    |
+| created_at    | Timestamp          | Time when account was created             |
+
 
 > A user can be a **host** (owns properties) or a **guest** (books properties).
 
@@ -136,20 +135,17 @@ This document outlines the core database models required for building the backen
 
 ### 2. 🏡 Property Table
 
-| Field           | Type           | Description                               |
-|-----------------|----------------|-------------------------------------------|
-| id              | UUID / Integer | Primary key                               |
-| owner_id        | FK → User      | The user who listed the property (host)   |
-| title           | String         | Title of the listing                      |
-| description     | Text           | Full description of the property          |
-| address         | String         | Property address                          |
-| city            | String         | City where property is located            |
-| country         | String         | Country of location                       |
-| price_per_night | Decimal        | Nightly rate                              |
-| max_guests      | Integer        | Max number of guests                      |
-| is_available    | Boolean        | Availability flag                         |
-| created_at      | DateTime       | When the property was listed              |
-| updated_at      | DateTime       | Last update time                          |
+| Field           | Type               | Description                                   |
+|----------------|--------------------|-----------------------------------------------|
+| property_id     | UUID / Integer     | Primary key (Indexed)                         |
+| owner_id        | UUID (FK → User)   | Refers to the user who listed the property    |
+| name            | String (VARCHAR)   | Title of the listing (Required)               |
+| description     | Text               | Full description of the property (Required)   |
+| location        | String (VARCHAR)   | Property address (Required)                   |
+| price_per_night | Decimal            | Nightly rate (Required)                       |
+| is_available    | Boolean            | True if property is currently available       |
+| created_at      | Timestamp          | When the property was listed                  |
+| updated_at      | Timestamp          | Last time the property was updated            |
 
 > A property belongs to **one host** (user).
 
@@ -157,33 +153,33 @@ This document outlines the core database models required for building the backen
 
 ### 3. 📅 Booking Table
 
-| Field         | Type           | Description                            |
-|---------------|----------------|----------------------------------------|
-| id            | UUID / Integer | Primary key                            |
-| user_id       | FK → User      | Guest who made the booking             |
-| property_id   | FK → Property  | Property being booked                  |
-| check_in      | Date           | Check-in date                          |
-| check_out     | Date           | Check-out date                         |
-| num_guests    | Integer        | Number of guests                       |
-| status        | String         | `pending`, `confirmed`, `cancelled`    |
-| created_at    | DateTime       | Booking creation time                  |
-| updated_at    | DateTime       | Booking update time                    |
+|| Field         | Type               | Description                                        |
+|---------------|---------------------|----------------------------------------------------|
+| booking_id    | UUID / Integer      | Primary key (Indexed)                              |
+| user_id       | UUID (FK → User)    | Guest who made the booking                         |
+| property_id   | UUID (FK → Property)| Property being booked                              |
+| check_in      | Date                | Check-in date (Required)                           |
+| check_out     | Date                | Check-out date (Required)                          |
+| total_price   | Decimal             | Total booking price (Required)                     |
+| status        | Enum                | `pending`, `confirmed`, or `cancelled` (Required)  |
+| created_at    | Timestamp           | When the booking was created                       |
+| updated_at    | Timestamp           | When the booking was last updated                  |
+
 
 > A user (guest) books a property.
 
 ---
 
 ### 4. 💳 Payment Table
+| Field          | Type               | Description                                         |
+|----------------|--------------------|-----------------------------------------------------|
+| payment_id     | UUID / Integer     | Primary key (Indexed)                               |
+| booking_id     | UUID (FK → Booking)| Booking associated with this payment                |
+| user_id        | UUID (FK → User)   | Guest who made the payment                          |
+| amount         | Decimal            | Total amount paid                                   |
+| payment_date   | Timestamp          | Date and time when payment was made                 |
+| payment_method | Enum               | `credit_card`, `paypal`, or `stripe` (Required)     |
 
-| Field         | Type           | Description                             |
-|---------------|----------------|-----------------------------------------|
-| id            | UUID / Integer | Primary key                             |
-| booking_id    | FK → Booking   | Booking related to this payment         |
-| user_id       | FK → User      | The guest who made the payment          |
-| amount        | Decimal        | Total amount paid                       |
-| status        | String         | `success`, `failed`, `pending`          |
-| transaction_id| String         | External payment gateway transaction ID |
-| paid_at       | DateTime       | Payment timestamp                       |
 
 > Each payment is tied to **one booking**.
 
@@ -191,17 +187,30 @@ This document outlines the core database models required for building the backen
 
 ### 5. 📝 Review Table
 
-| Field         | Type           | Description                             |
-|---------------|----------------|-----------------------------------------|
-| id            | UUID / Integer | Primary key                             |
-| user_id       | FK → User      | Reviewer (guest)                        |
-| property_id   | FK → Property  | Reviewed property                       |
-| rating        | Integer        | 1 to 5 stars                            |
-| comment       | Text           | Review content                          |
-| created_at    | DateTime       | Review creation time                    |
+| Field        | Type                | Description                                  |
+|--------------|---------------------|----------------------------------------------|
+| review_id    | UUID / Integer      | Primary key (Indexed)                        |
+| user_id      | UUID (FK → User)    | Guest who wrote the review                   |
+| property_id  | UUID (FK → Property)| Property being reviewed                      |
+| rating       | Integer             | Star rating from 1 to 5 (Required)           |
+| comment      | Text                | Written review content (Required)            |
+| created_at   | Timestamp           | When the review was created                  |
 
 > A guest can leave **one review per booking** (enforceable via constraints if required).
 
+---
+
+### 6. 💬 Message Table 
+
+| Field         | Type               | Description                                     |
+|---------------|--------------------|-------------------------------------------------|
+| message_id    | UUID / Integer     | Primary key (Indexed)                           |
+| sender_id     | UUID (FK → User)   | User who sent the message                       |
+| recipient_id  | UUID (FK → User)   | User who received the message                   |
+| message_body  | Text               | Content of the message (Required)               |
+| sent_at       | Timestamp          | Date and time when the message was sent         |
+
+> A message is sent by one user **sender** and received by another user **recipient**.
 ---
 
 ### 🔁 Relationships Summary
