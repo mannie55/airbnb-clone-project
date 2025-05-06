@@ -153,7 +153,7 @@ This document outlines the core database models required for building the backen
 
 ### 3. 📅 Booking Table
 
-|| Field         | Type               | Description                                        |
+| Field         | Type                | Description                                        |
 |---------------|---------------------|----------------------------------------------------|
 | booking_id    | UUID / Integer      | Primary key (Indexed)                              |
 | user_id       | UUID (FK → User)    | Guest who made the booking                         |
